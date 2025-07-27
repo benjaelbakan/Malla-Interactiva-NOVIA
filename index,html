@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Malla Curricular Interactiva</title>
+  <style>
+    /* Fondo con gradiente animado */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(-45deg, #89f7fe, #66a6ff, #89f7fe, #66a6ff);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: #222;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    @keyframes gradientBG {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    /* Título principal */
+    h1 {
+      text-align: center;
+      color: #0d3b66;
+      text-shadow: 2px 2px 8px rgba(13, 59, 102, 0.4);
+      font-weight: 700;
+      font-size: 2.8rem;
+      margin-bottom: 30px;
+    }
+
+    /* Contenedor de la malla */
+    .malla {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      gap: 25px;
+      padding-bottom: 15px;
+    }
+
+    /* Tarjetas de semestre */
+    .semestre {
+      flex: 0 0 250px;
+      background: rgba(255 255 255 / 0.85);
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      padding: 20px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .semestre:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.18);
+    }
+
+    /* Semestre título */
+    .semestre h3 {
+      text-align: center;
+      color: #054a91;
+      font-weight: 600;
+      font-size: 1.6rem;
+      margin-bottom: 18px;
+      text-shadow: 1px 1px 3px rgba(5, 74, 145, 0.3);
+    }
+
+    /* Materias */
+    .materia {
+      margin: 10px 0;
+      padding: 14px 12px;
+      background: #e6f0ff;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+      position: relative;
+      user-select: none;
+      font-weight: 600;
+      color: #0d3b66;
+      box-shadow: 0 2px 8px rgba(13, 59, 102, 0.15);
+    }
+
+    .materia:hover {
+      background-color: #c1d9ff;
+      box-shadow: 0 8px 18px rgba(13, 59, 102, 0.25);
+      transform: translateY(-3px);
+    }
+
+    /* Materia aprobada con patita animada (solo cambia el fondo a rosa pastel) */
+    .materia.aprobada {
+      background-color: #f8d7e0 !important; /* rosa pastel suave */
+      color: #0d3b66;
+      box-shadow: 0 6px 20px rgba(13, 59, 102, 0.35);
+      text-decoration: none !important;
+      overflow: visible;
+    }
+
+    .materia.aprobada::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 40px;
+      height: 40px;
+      background-image: url('https://i.imgur.com/BnYdaUy.jpeg');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      pointer-events: none;
+      z-index: 10;
+      transform: translate(-50%, -50%);
+      animation: balanceo 3s infinite ease-in-out;
+      transform-origin: center bottom;
+    }
+
+    /* Animación balanceo */
+    @keyframes balanceo {
+      0%, 100% {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+      50% {
+        transform: translate(-50%, -50%) rotate(15deg);
+      }
+    }
+
+    /* Materia bloqueada */
+    .materia.bloqueada {
+      background: #f0f0f0 !important;
+      color: #999;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none !important;
+    }
+
+    .materia[title]:hover::before {
+      content: attr(title);
+      position: absolute;
+      bottom: 110%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(13, 59, 102, 0.85);
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      white-space: nowrap;
+      z-index: 20;
+      pointer-events: none;
+      opacity: 0.95;
+    }
+
+    /* Scrollbar personalizado para la malla */
+    .malla::-webkit-scrollbar {
+      height: 10px;
+    }
+    .malla::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.3);
+      border-radius: 10px;
+    }
+    .malla::-webkit-scrollbar-thumb {
+      background: #054a91;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Malla Curricular Interactiva - Medicina Veterinaria</h1>
+
+<div class="malla" id="malla"></div>
+
+<script>
+  const materias = {
+    "1": [
+      { id: "anatomia1", nombre: "Anatomía Animal I" },
+      { id: "biologia_celular", nombre: "Biología Celular" },
+      { id: "quimica_general", nombre: "Química General" },
+      { id: "zoologia", nombre: "Zoología" },
+      { id: "fisica_matematica_intro", nombre: "Introducción a la Física Matemática" },
+      { id: "taller_formativo", nombre: "Taller Formativo" }
+    ],
+    "2": [
+      { id: "anatomia2", nombre: "Anatomía Animal II" },
+      { id: "fisiologia1", nombre: "Fisiología Animal I" },
+      { id: "genetica", nombre: "Genética" },
+      { id: "histologia", nombre: "Histología Animal" },
+      { id: "bioquimica", nombre: "Bioquímica" },
+      { id: "orientacion_vocacional", nombre: "Orientación Vocacional" },
+      { id: "complementario1", nombre: "Complementario I" }
+    ],
+    "3": [
+      { id: "embriologia", nombre: "Embriología Animal" },
+      { id: "fisiologia2", nombre: "Fisiología Animal II" },
+      { id: "inmunologia", nombre: "Inmunología" },
+      { id: "ecologia", nombre: "Ecología" },
+      { id: "bioestadistica", nombre: "Bioestadística" },
+      { id: "ingles1", nombre: "Inglés I" },
+      { id: "electivo1", nombre: "Electivo I" }
+    ],
+    "4": [
+      { id: "patologia1", nombre: "Patología Animal I" },
+      { id: "etologia_bienestar", nombre: "Etología y Bienestar Animal" },
+      { id: "virologia", nombre: "Virología" },
+      { id: "bacteriologia_micologia", nombre: "Bacteriología y Micología" },
+      { id: "biodiversidad_conservacion", nombre: "Biodiversidad y Conservación de Especies" },
+      { id: "ingles2", nombre: "Inglés II" },
+      { id: "electivo2", nombre: "Electivo II" }
+    ],
+    "5": [
+      { id: "patologia2", nombre: "Patología Animal II" },
+      { id: "fisiopatologia", nombre: "Fisiopatología Animal" },
+      { id: "enfermedades_infecciosas", nombre: "Enfermedades Infecciosas" },
+      { id: "enfermedades_parasitarias", nombre: "Enfermedades Parasitarias" },
+      { id: "economia", nombre: "Economía" }
+    ],
+    "6": [
+      { id: "reproduccion", nombre: "Reproducción Animal" },
+      { id: "produccion_sanidad_acuicola", nombre: "Producción y Sanidad Acuícola" },
+      { id: "nutricion", nombre: "Nutrición Animal" },
+      { id: "farmacologia", nombre: "Farmacología" },
+      { id: "imagenologia", nombre: "Imagenología" },
+      { id: "epidemiologia", nombre: "Epidemiología" },
+      { id: "practica_curricular1", nombre: "Práctica Curricular I" }
+    ],
+    "7": [
+      { id: "gine", nombre: "Ginecología y Andrología", requisitos: [] },
+      { id: "alimen", nombre: "Alimentación Animal", requisitos: [] },
+      { id: "avicola", nombre: "Producción Avícola", requisitos: [] },
+      { id: "anest", nombre: "Anestesiología y Cirugía", requisitos: [] },
+      { id: "semio", nombre: "Semiología Animal", requisitos: [] },
+      { id: "gestion", nombre: "Gestión y Administración", requisitos: [] },
+      { id: "practica2", nombre: "Práctica Curricular II", requisitos: [] }
+    ],
+    "8": [
+      { id: "obste", nombre: "Obstetricia y Neonatología", requisitos: ["gine"] },
+      { id: "porcina", nombre: "Producción Porcina", requisitos: ["alimen"] },
+      { id: "patoclin", nombre: "Patología Clínica", requisitos: ["anest"] },
+      { id: "medgrandes", nombre: "Medicina y Cirugía Grandes Animales", requisitos: ["anest", "semio"] },
+      { id: "medpeques", nombre: "Medicina y Cirugía Pequeños Animales", requisitos: ["anest", "semio"] },
+      { id: "higiene", nombre: "Inspección e Higiene de los Alimentos", requisitos: [] },
+      { id: "gira", nombre: "Gira de Estudio", requisitos: [] },
+      { id: "examen", nombre: "Examen de Grado", requisitos: [] }
+    ],
+    "9": [
+      { id: "rumiantescarne", nombre: "Producción Rumiantes Carne", requisitos: ["alimen", "obste"] },
+      { id: "preventiva", nombre: "Medicina Preventiva", requisitos: ["patoclin"] },
+      { id: "clinicagrande", nombre: "Clínica Grandes Animales", requisitos: ["medgrandes"] },
+      { id: "clinicapeque", nombre: "Clínica Pequeños Animales", requisitos: ["medpeques"] },
+      { id: "tecali", nombre: "Tecnología de Alimentos", requisitos: ["higiene"] },
+      { id: "electivaespecial1", nombre: "Electiva de Especialidad 1", requisitos: [] }
+    ],
+    "10": [
+      { id: "rumiantesleche", nombre: "Producción Rumiantes Leche", requisitos: ["alimen", "obste"] },
+      { id: "electiva2", nombre: "Electiva Especialidad 2", requisitos: [] },
+      { id: "electiva3", nombre: "Electiva Especialidad 3", requisitos: [] },
+      { id: "electiva4", nombre: "Electiva Especialidad 4", requisitos: [] },
+      { id: "saludpub", nombre: "Salud Pública", requisitos: ["tecali"] },
+      { id: "formulacion", nombre: "Formulación y Evaluación de Proyectos", requisitos: ["gestion"] },
+      { id: "titula1", nombre: "Práctica Titulación / Inserción", requisitos: [] }
+    ],
+    "11": [
+      { id: "titulacion", nombre: "Trabajo de Titulación", requisitos: ["titula1"] }
+    ]
+  };
+
+  const estado = JSON.parse(localStorage.getItem("estadoMalla") || "{}");
+
+  function guardarEstado() {
+    localStorage.setItem("estadoMalla", JSON.stringify(estado));
+  }
+
+  function puedeAprobar(materia) {
+    if (!materia.requisitos || materia.requisitos.length === 0) {
+      if (["electiva2", "electiva3", "electiva4"].includes(materia.id)) {
+        const requeridas = materias["8"]
+          .filter(m => !["gira", "examen"].includes(m.id))
+          .map(m => m.id);
+        return requeridas.every(id => estado[id]);
+      }
+      if (materia.id === "gira" || materia.id === "examen") {
+        const ramosHastaHigiene = materias["8"]
+          .filter(m => m.id !== "gira" && m.id !== "examen")
+          .map(m => m.id);
+        return ramosHastaHigiene.every(id => estado[id]);
+      }
+      if (materia.id === "titula1") {
+        const ramosHastaElectivaEspecial1 = [];
+        for (const m of materias["9"]) {
+          ramosHastaElectivaEspecial1.push(m.id);
+          if (m.id === "electivaespecial1") break;
+        }
+        return ramosHastaElectivaEspecial1.every(id => estado[id]);
+      }
+      return true;
+    }
+    return materia.requisitos.every(req => estado[req]);
+  }
+
+  function buscarNombre(id) {
+    for (let semestre in materias) {
+      for (let mat of materias[semestre]) {
+        if (mat.id === id) return mat.nombre;
+      }
+    }
+    return id;
+  }
+
+  function render() {
+    const contenedor = document.getElementById("malla");
+    contenedor.innerHTML = "";
+
+    for (let semestre in materias) {
+      const col = document.createElement("div");
+      col.className = "semestre";
+      col.innerHTML = `<h3>${semestre}º Semestre</h3>`;
+
+      materias[semestre].forEach(mat => {
+        const div = document.createElement("div");
+        div.className = "materia";
+        div.textContent = mat.nombre;
+        div.setAttribute("data-id", mat.id);
+
+        const aprobada = estado[mat.id] === true;
+        const bloqueada = !puedeAprobar(mat) && !aprobada;
+
+        if (aprobada) div.classList.add("aprobada");
+        else if (bloqueada) {
+          div.classList.add("bloqueada");
+          const faltan = mat.requisitos?.filter(r => !estado[r]).map(buscarNombre);
+          if (faltan && faltan.length) {
+            div.title = "Requiere: " + faltan.join(", ");
+          }
+        }
+
+        div.addEventListener("click", () => {
+          if (bloqueada) return;
+          estado[mat.id] = !aprobada;
+          guardarEstado();
+          render();
+        });
+
+        col.appendChild(div);
+      });
+
+      contenedor.appendChild(col);
+    }
+  }
+
+  render();
+</script>
+
+</body>
+</html>
