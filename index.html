@@ -1,127 +1,237 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <link href="https://fonts.googleapis.com/css2?family=Playball&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Corben&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Petit+Formal+Script&display=swap" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/css2?family=Caprasimo&display=swap" rel="stylesheet">
   <meta charset="UTF-8" />
   <title>Malla Curricular Interactiva</title>
   <style>
-    /* Fondo con gradiente animado */
     body {
+      
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 20px;
-      background: linear-gradient(-45deg, #89f7fe, #66a6ff, #89f7fe, #66a6ff);
-      background-size: 400% 400%;
+      background-image: 
+        url('https://i.imgur.com/C70nQ3p.jpeg'),
+        linear-gradient(-45deg, #89f7fe, #66a6ff, #89f7fe, #66a6ff);
+      background-size: cover, 300% 300%;
+      background-repeat: no-repeat, no-repeat;
+      background-position: center center, 0% 50%;
       animation: gradientBG 15s ease infinite;
       color: #222;
       min-height: 100vh;
       overflow-x: hidden;
+      position: relative;
+      z-index: 0;
     }
 
-    @keyframes gradientBG {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255,255,255,0.3);
+      pointer-events: none;
+      z-index: 0;
     }
 
-    /* Título principal */
+  @keyframes clickFlip {
+  0% {
+    transform: rotateY(0deg);
+  }
+  50% {
+    transform: rotateY(15deg);
+  }
+  100% {
+    transform: rotateY(0deg);
+  }
+}
+
+
+.materia.clicked {
+  animation: clickFlip 0.4s ease forwards;
+  /* Opcional: para que se vea más suave */
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.materia:active {
+  animation: clickFlip 0.4s ease forwards;
+}
+
+.materia:active {
+  animation: clickPress 0.3s ease forwards;
+}
+
     h1 {
-      text-align: center;
-      color: #0d3b66;
-      text-shadow: 2px 2px 8px rgba(13, 59, 102, 0.4);
-      font-weight: 700;
-      font-size: 2.8rem;
-      margin-bottom: 30px;
+        font-family: 'Caprasimo', cursive;
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        color: #A26BD4;
+        text-shadow: 2px 2px 8px rgba(13, 59, 102, 0.4);
+        font-weight: 400; /* Playball es más decorativa, no uses 700 */
+        font-size: 3.2rem;
+        margin-bottom: 30px;
+        user-select: none;
     }
-
-    /* Contenedor de la malla */
-    .malla {
-      display: flex;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      gap: 25px;
-      padding-bottom: 15px;
-    }
-
-    /* Tarjetas de semestre */
-    .semestre {
-      flex: 0 0 250px;
+        .semestre-grupo {
+      width: 540px; /* suma de dos semestres más gap */
       background: rgba(255 255 255 / 0.85);
       border-radius: 20px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.1);
       padding: 20px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      margin-top: 90px;
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      box-sizing: border-box;
     }
-
-    .semestre:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.18);
+    .semestre-grupo > .semestre {
+      background: none; /* quitar fondo de cada semestre individual */
+      border-radius: 0;
+      box-shadow: none;
+      padding: 0;
+      margin-top: 0;
+      flex: 1;
     }
-
-    /* Semestre título */
-    .semestre h3 {
-      text-align: center;
-      color: #054a91;
+    .semestre-grupo > .semestre h3 {
+      color: #9A7CC5;
       font-weight: 600;
       font-size: 1.6rem;
       margin-bottom: 18px;
       text-shadow: 1px 1px 3px rgba(5, 74, 145, 0.3);
+      user-select: none;
+      text-align: center;
     }
 
-    /* Materias */
+
+    .malla {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      gap: 40px;
+      padding-bottom: 15px;
+    }
+
+    .ano-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+      min-width: max-content;
+    }
+
+      .ano-titulo {
+      width: 540px; /* 260 + 260 + 20 (gap) */
+      background: rgba(255 255 255 / 0.85);
+      border: 2.5px solid #C8A9E2;
+      border-radius: 14px 14px 0 0;
+      box-shadow: 0 3px 8px rgba(124,169,230,0.5);
+      font-size: 2rem;
+      color: #A26BD4;
+      font-weight: 700;
+      text-align: center;
+      padding: 10px 0;
+      user-select: none;
+      margin-bottom: 0;
+      box-sizing: border-box;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+      z-index: 10;
+      font-family: 'Corben', serif;
+    }
+    .ano-titulo.año6 {
+      display: none;
+    }
+
+    .ano {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      min-width: max-content;
+      flex-shrink: 0;
+      align-items: flex-start;
+      margin-top: 90px;
+    }
+
+    .semestre {
+      width: 260px;
+      background: rgba(255 255 255 / 0.85);
+      border-radius: 20px;
+      box-shadow: 0 8px 20px #063352;
+      padding: 20px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      margin-top: 0;
+    }
+    /*.semestre:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.18);
+    }*/
+    .semestre h3 {
+      text-align: center;
+      color: #9A7CC5;
+      font-weight: 600;
+      font-size: 1.6rem;
+      margin-bottom: 18px;
+      text-shadow: 1px 1px 3px rgba(5, 74, 145, 0.3);
+      user-select: none;
+      font-family: 'Questrial', sans-serif;
+    }
+
     .materia {
       margin: 10px 0;
       padding: 14px 12px;
-      background: #e6f0ff;
+      background: #F8C4D4;
       border-radius: 12px;
       cursor: pointer;
       transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
       position: relative;
       user-select: none;
       font-weight: 600;
-      color: #0d3b66;
+      color: #290f3f;
       box-shadow: 0 2px 8px rgba(13, 59, 102, 0.15);
+      font-family: 'Questrial', sans-serif;
     }
-
     .materia:hover {
-      background-color: #c1d9ff;
-      box-shadow: 0 8px 18px rgba(13, 59, 102, 0.25);
+      background-color: #e7a1de;
+      box-shadow: 0 8px 18px rgba(175, 54, 206, 0.25);
       transform: translateY(-3px);
+      font-family: 'Questrial', sans-serif;
     }
-
-    /* Materia aprobada con patita animada (solo cambia el fondo a rosa pastel) */
     .materia.aprobada {
-      background-color: #f8d7e0 !important; /* rosa pastel suave */
-      color: #0d3b66;
-      box-shadow: 0 6px 20px rgba(13, 59, 102, 0.35);
+      background-color: #C8A9E2 !important;
+      color: #000000;
+      box-shadow: 0 6px 20px rgba(133, 173, 211, 0.35);
       text-decoration: none !important;
       overflow: visible;
     }
-
     .materia.aprobada::after {
       content: "";
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 40px;
-      height: 40px;
-      background-image: url('https://i.imgur.com/BnYdaUy.jpeg');
+      width: 50px;
+      height: 50px;
+      background-image: url('https://i.imgur.com/GylvqfN.png');
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
       pointer-events: none;
       z-index: 10;
-      transform: translate(-50%, -50%);
-      animation: balanceo 3s infinite ease-in-out;
       transform-origin: center bottom;
+      transform: translate(-50%, -50%);
     }
-
-    /* Animación balanceo */
     @keyframes balanceo {
       0%, 100% {
         transform: translate(-50%, -50%) rotate(0deg);
@@ -130,16 +240,14 @@
         transform: translate(-50%, -50%) rotate(15deg);
       }
     }
-
-    /* Materia bloqueada */
     .materia.bloqueada {
       background: #f0f0f0 !important;
       color: #999;
       cursor: not-allowed;
       box-shadow: none;
       transform: none !important;
+      font-family: 'Questrial', sans-serif;
     }
-
     .materia[title]:hover::before {
       content: attr(title);
       position: absolute;
@@ -157,9 +265,8 @@
       opacity: 0.95;
     }
 
-    /* Scrollbar personalizado para la malla */
     .malla::-webkit-scrollbar {
-      height: 10px;
+      height: 12px;
     }
     .malla::-webkit-scrollbar-track {
       background: rgba(255,255,255,0.3);
@@ -169,11 +276,140 @@
       background: #054a91;
       border-radius: 10px;
     }
+    .subrayado {
+    text-decoration: underline;
+  }
+    .materia.habilitada {
+    box-shadow: 0 0 15px 4px #7d5fff;
+    background-color: #D7CCFF;
+    color: #3a007e;
+    cursor: pointer;
+    transition: box-shadow 0.6s ease-in-out;
+    animation: pulsoHabilitada 2s infinite;
+  }
+
+  @keyframes pulsoHabilitada {
+    0%, 100% {
+      box-shadow: 0 0 15px 4px #7d5fff;
+    }
+    50% {
+      box-shadow: 0 0 25px 6px #b19aff;
+    }
+  }
+  @keyframes brilloDestello {
+    0% {
+      box-shadow: 0 0 0px 0px rgba(255, 255, 255, 0);
+    }
+    50% {
+      box-shadow: 0 0 15px 6px rgba(255, 255, 255, 0.8);
+    }
+    100% {
+      box-shadow: 0 0 0px 0px rgba(255, 255, 255, 0);
+    }
+  }
+
+  .materia.brillo {
+    animation: brilloDestello 0.8s ease forwards;
+    position: relative;
+    z-index: 1000;
+  }
+
+  .destello {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 70%);
+  animation: destelloAnim 0.7s ease forwards;
+  filter: drop-shadow(0 0 5px white);
+  z-index: 1000;
+}
+
+@keyframes destelloAnim {
+    0% {
+      transform: scale(0.1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1.5);
+      opacity: 0;
+    }
+  }
+
+  #mensajeSorpresa {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: #a26bd4;
+  color: white;
+  font-family: 'Caprasimo', cursive;
+  font-size: 3rem;
+  padding: 30px 50px;
+  border-radius: 20px;
+  box-shadow: 0 0 20px #a26bd4;
+  user-select: none;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+#mensajeSorpresa.mostrar {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+  animation: brilloMensaje 1.8s ease forwards;
+}
+
+@keyframes brilloMensaje {
+  0%, 100% {
+    text-shadow: 0 0 5px white;
+  }
+  50% {
+    text-shadow: 0 0 25px white;
+  }
+}
+
+  #mensajeFijo {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #7D4AE8;
+    color: white;
+    font-family: 'Caprasimo', cursive;
+    font-size: 2.8rem;
+    padding: 40px 60px;
+    border-radius: 25px;
+    box-shadow: 0 0 30px #7D4AE8;
+    user-select: none;
+    z-index: 99999;
+    text-align: center;
+    animation: brilloFijo 2s ease infinite alternate;
+  }
+
+  @keyframes brilloFijo {
+    0% {
+      text-shadow: 0 0 10px #B499F9;
+    }
+    100% {
+      text-shadow: 0 0 30px #D2B8FF;
+    }
+  }
+
+
+
+
+
+    
   </style>
 </head>
 <body>
+  
 
-<h1>Malla Curricular Interactiva - Medicina Veterinaria</h1>
+<h1>🐱 Malla para <span class="subrayado">mi veterinaria favorita y preciosa</span> 🐼</h1>
 
 <div class="malla" id="malla"></div>
 
@@ -313,49 +549,160 @@
     return id;
   }
 
+  function crearMateriaDiv(mat) {
+    const div = document.createElement("div");
+    div.className = "materia";
+    div.textContent = mat.nombre;
+    div.setAttribute("data-id", mat.id);
+
+    const aprobada = estado[mat.id] === true;
+    const bloqueada = !puedeAprobar(mat) && !aprobada;
+
+    if (aprobada) div.classList.add("aprobada");
+    else if (bloqueada) {
+      div.classList.add("bloqueada");
+      const faltan = mat.requisitos?.filter(r => !estado[r]).map(buscarNombre);
+      if (faltan && faltan.length) {
+        div.title = "Requiere: " + faltan.join(", ");
+      }
+    }
+
+    // NUEVO: si es "titulacion" y "titula1" aprobada, marcar habilitada
+    if (mat.id === "titulacion" && estado["titula1"] === true && !aprobada) {
+      div.classList.add("habilitada");
+    }
+
+    div.addEventListener("click", () => {
+      if (bloqueada) return;
+
+      const estabaAprobada = estado[mat.id] === true;
+      estado[mat.id] = !estabaAprobada;
+      guardarEstado();
+
+      div.classList.add("clicked");
+
+      if (mat.id === "titulacion" && !estabaAprobada) {
+        mostrarMensajeFijo();
+      }
+
+      setTimeout(() => {
+        div.classList.remove("clicked");
+        render();
+      }, 400);
+    });
+
+
+
+
+
+    return div;
+  }
+
+
   function render() {
     const contenedor = document.getElementById("malla");
     contenedor.innerHTML = "";
 
-    for (let semestre in materias) {
+    // Agrupación de semestres en años para mostrar horizontalmente (sin el 11)
+    const anos = {
+      1: ["1", "2"],
+      2: ["3", "4"],
+      3: ["5", "6"],
+      4: ["7", "8"],
+      5: ["9", "10"]
+    };
+
+      for (const [ano, semestres] of Object.entries(anos)) {
+    const anoContainer = document.createElement("div");
+    anoContainer.className = "ano-container";
+
+    const anoDiv = document.createElement("div");
+    anoDiv.className = "ano-titulo";
+    anoDiv.textContent = `Año ${ano}`;
+    anoContainer.appendChild(anoDiv);
+
+    // Contenedor que agrupa dos semestres en un solo cuadro
+    const semestreGrupo = document.createElement("div");
+    semestreGrupo.className = "semestre-grupo";
+
+    for (const sem of semestres) {
+      if (!materias[sem]) continue;
       const col = document.createElement("div");
       col.className = "semestre";
-      col.innerHTML = `<h3>${semestre}º Semestre</h3>`;
+      col.innerHTML = `<h3>${sem}º Semestre</h3>`;
 
-      materias[semestre].forEach(mat => {
-        const div = document.createElement("div");
-        div.className = "materia";
-        div.textContent = mat.nombre;
-        div.setAttribute("data-id", mat.id);
-
-        const aprobada = estado[mat.id] === true;
-        const bloqueada = !puedeAprobar(mat) && !aprobada;
-
-        if (aprobada) div.classList.add("aprobada");
-        else if (bloqueada) {
-          div.classList.add("bloqueada");
-          const faltan = mat.requisitos?.filter(r => !estado[r]).map(buscarNombre);
-          if (faltan && faltan.length) {
-            div.title = "Requiere: " + faltan.join(", ");
-          }
-        }
-
-        div.addEventListener("click", () => {
-          if (bloqueada) return;
-          estado[mat.id] = !aprobada;
-          guardarEstado();
-          render();
-        });
-
-        col.appendChild(div);
+      materias[sem].forEach(mat => {
+        const matDiv = crearMateriaDiv(mat);
+        col.appendChild(matDiv);
       });
 
-      contenedor.appendChild(col);
+      semestreGrupo.appendChild(col);
+    }
+
+    anoContainer.appendChild(semestreGrupo);
+    contenedor.appendChild(anoContainer);
+  }
+
+
+    // Renderizar semestre 11 solo, sin título de año
+    if (materias["11"]) {
+      const anoContainer = document.createElement("div");
+      anoContainer.className = "ano-container";
+
+      const anoFlex = document.createElement("div");
+      anoFlex.className = "ano";
+
+      const col = document.createElement("div");
+      col.className = "semestre";
+      col.innerHTML = `<h3>11º Semestre</h3>`;
+
+      materias["11"].forEach(mat => {
+        const matDiv = crearMateriaDiv(mat);
+        col.appendChild(matDiv);
+      });
+
+      anoFlex.appendChild(col);
+      anoContainer.appendChild(anoFlex);
+      contenedor.appendChild(anoContainer);
     }
   }
+    function mostrarMensajeFijo() {
+      if (document.getElementById("mensajeFijo")) return;
+
+      const msg = document.createElement("div");
+      msg.id = "mensajeFijo";
+      msg.innerHTML = `
+        <div class="mensaje-contenido">
+          🎓 Sabía que podías lograrlo, mi amor. Siempre confié en ti y en tus capacidades, mi cabezona. ❤️ <br>
+          Eres la mejor novia del mundo y te amo demasiado. <br>
+          Espero puedas y podamos seguir esforzándonos como novios y como el equipo que somos. <br><br>
+          💕 TE AMO DEMASIADO MI VETERINARIA HERMOSA 💕 <br>
+          <span style="font-size: 2rem;">❤️</span>
+        </div>
+      `;
+      document.body.appendChild(msg);
+
+      // Reproducir música
+      const audio = document.getElementById("audioFelicidad");
+      if (audio) {
+        audio.volume = 0.8;
+        audio.play().catch(e => console.warn("No se pudo reproducir el audio:", e));
+      }
+    }
+
+
+
+
+    
+
 
   render();
 </script>
+<audio id="audioFelicidad" preload="auto">
+  <source src="C:\Users\Benja\Desktop\COLDPLAY - VIVA LA VIDA  SUBTITULADA (INGLESESPAÑOL).mp3" type="audio/mpeg">
+  Tu navegador no soporta audio HTML5.
+</audio>
+
 
 </body>
 </html>
