@@ -37,25 +37,22 @@
       z-index: 0;
     }
 
-  @keyframes clickFlip {
-  0% {
-    transform: rotateY(0deg);
-  }
-  50% {
-    transform: rotateY(15deg);
-  }
-  100% {
-    transform: rotateY(0deg);
-  }
+@keyframes softColorFade {
+  0% { background-color: #F8C4D4; }
+  50% { background-color: #b49dd4; }
+  100% { background-color: #C8A9E2; }
 }
-
 
 .materia.clicked {
-  animation: clickFlip 0.4s ease forwards;
-  /* Opcional: para que se vea más suave */
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
+  animation: softColorFade 0.2s ease forwards;
 }
+
+
+
+
+
+
+
 
 .materia:active {
   animation: clickFlip 0.4s ease forwards;
@@ -71,7 +68,7 @@
         z-index: 1;
         text-align: center;
         color: #A26BD4;
-        text-shadow: 2px 2px 8px rgba(13, 59, 102, 0.4);
+        
         font-weight: 400; /* Playball es más decorativa, no uses 700 */
         font-size: 3.2rem;
         margin-bottom: 30px;
@@ -211,7 +208,7 @@
     }
     .materia.aprobada {
       background-color: #C8A9E2 !important;
-      color: #000000;
+      color: #ffffff;
       box-shadow: 0 6px 20px rgba(133, 173, 211, 0.35);
       text-decoration: none !important;
       overflow: visible;
@@ -221,9 +218,9 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 50px;
-      height: 50px;
-      background-image: url('https://i.imgur.com/GylvqfN.png');
+      width: 60px;
+      height: 60px;
+      background-image: url('https://i.imgur.com/YMKgzak.png');
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
@@ -240,14 +237,15 @@
         transform: translate(-50%, -50%) rotate(15deg);
       }
     }
-    .materia.bloqueada {
+      .materia.bloqueada {
       background: #f0f0f0 !important;
-      color: #999;
+      color: #555555; /* gris plomo más oscuro */
       cursor: not-allowed;
       box-shadow: none;
       transform: none !important;
       font-family: 'Questrial', sans-serif;
     }
+
     .materia[title]:hover::before {
       content: attr(title);
       position: absolute;
@@ -281,38 +279,35 @@
   }
     .materia.habilitada {
     box-shadow: 0 0 15px 4px #7d5fff;
-    background-color: #D7CCFF;
-    color: #3a007e;
+    background-color: #F8C4D4;
+    color: #0b0116;
     cursor: pointer;
     transition: box-shadow 0.6s ease-in-out;
     animation: pulsoHabilitada 2s infinite;
   }
+  .materia[data-id="titulacion"].brillo,
+.materia[data-id="titulacion"].habilitada {
+  box-shadow: none !important;
+  animation: none !important;
+}
 
-  @keyframes pulsoHabilitada {
-    0%, 100% {
-      box-shadow: 0 0 15px 4px #7d5fff;
-    }
-    50% {
-      box-shadow: 0 0 25px 6px #b19aff;
-    }
-  }
-  @keyframes brilloDestello {
-    0% {
-      box-shadow: 0 0 0px 0px rgba(255, 255, 255, 0);
-    }
-    50% {
-      box-shadow: 0 0 15px 6px rgba(255, 255, 255, 0.8);
-    }
-    100% {
-      box-shadow: 0 0 0px 0px rgba(255, 255, 255, 0);
-    }
-  }
 
-  .materia.brillo {
-    animation: brilloDestello 0.8s ease forwards;
-    position: relative;
-    z-index: 1000;
+@keyframes balanceoLateral {
+  0%, 100% {
+    transform: rotate(-3deg);
   }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+.materia[data-id="titulacion"].animacion-balanceo {
+  animation: balanceoLateral 2s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+
+
 
   .destello {
   position: absolute;
@@ -326,16 +321,7 @@
   z-index: 1000;
 }
 
-@keyframes destelloAnim {
-    0% {
-      transform: scale(0.1);
-      opacity: 1;
-    }
-    100% {
-      transform: scale(1.5);
-      opacity: 0;
-    }
-  }
+
 
   #mensajeSorpresa {
   position: fixed;
@@ -372,32 +358,31 @@
   }
 }
 
-  #mensajeFijo {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #7D4AE8;
-    color: white;
-    font-family: 'Caprasimo', cursive;
-    font-size: 2.8rem;
-    padding: 40px 60px;
-    border-radius: 25px;
-    box-shadow: 0 0 30px #7D4AE8;
-    user-select: none;
-    z-index: 99999;
-    text-align: center;
-    animation: brilloFijo 2s ease infinite alternate;
-  }
+#mensajeFijo {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid #ff69b4;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 0 30px pink;
+  z-index: 9999;
+  animation: aparecer 1.5s ease-out;
+}
 
-  @keyframes brilloFijo {
-    0% {
-      text-shadow: 0 0 10px #B499F9;
-    }
-    100% {
-      text-shadow: 0 0 30px #D2B8FF;
-    }
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.8);
   }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
 
 
 
@@ -569,27 +554,36 @@
 
     // NUEVO: si es "titulacion" y "titula1" aprobada, marcar habilitada
     if (mat.id === "titulacion" && estado["titula1"] === true && !aprobada) {
-      div.classList.add("habilitada");
+      div.classList.add("animacion-balanceo");
     }
 
-    div.addEventListener("click", () => {
-      if (bloqueada) return;
+div.addEventListener("click", () => {
+  if (bloqueada) return;
 
-      const estabaAprobada = estado[mat.id] === true;
-      estado[mat.id] = !estabaAprobada;
-      guardarEstado();
+  const estabaAprobada = estado[mat.id] === true;
+  estado[mat.id] = !estabaAprobada;
+  guardarEstado();
 
-      div.classList.add("clicked");
+  // Mostrar la clase 'aprobada' al instante si se aprueba
+  if (!estabaAprobada) {
+    div.classList.add("aprobada");
+  } else {
+    div.classList.remove("aprobada");
+  }
 
-      if (mat.id === "titulacion" && !estabaAprobada) {
-        mostrarMensajeFijo();
-      }
+  div.classList.add("clicked");
 
-      setTimeout(() => {
-        div.classList.remove("clicked");
-        render();
-      }, 400);
-    });
+  if (mat.id === "titulacion" && !estabaAprobada) {
+    mostrarMensajeFijo();
+  }
+
+  setTimeout(() => {
+    div.classList.remove("clicked");
+    render();
+  }, 300);
+});
+
+
 
 
 
@@ -672,8 +666,8 @@
       const msg = document.createElement("div");
       msg.id = "mensajeFijo";
       msg.innerHTML = `
-        <div class="mensaje-contenido">
-          🎓 Sabía que podías lograrlo, mi amor. Siempre confié en ti y en tus capacidades, mi cabezona. ❤️ <br>
+        <div class="mensaje-contenido" style="font-family: 'Questrial', sans-serif; font-size: 1.3rem; text-align: center;">
+          🎓 Sabía que podías lograrlo, mi amor. Siempre confié en ti y en tus capacidades, mi cabezona. ❤️ <br><br>
           Eres la mejor novia del mundo y te amo demasiado. <br>
           Espero puedas y podamos seguir esforzándonos como novios y como el equipo que somos. <br><br>
           💕 TE AMO DEMASIADO MI VETERINARIA HERMOSA 💕 <br>
@@ -693,13 +687,14 @@
 
 
 
+
     
 
 
   render();
 </script>
 <audio id="audioFelicidad" preload="auto">
-  <source src="C:\Users\Benja\Desktop\COLDPLAY - VIVA LA VIDA  SUBTITULADA (INGLESESPAÑOL).mp3" type="audio/mpeg">
+  <source src="audio.mp3/audio.mp3" type="audio/mpeg">
   Tu navegador no soporta audio HTML5.
 </audio>
 
