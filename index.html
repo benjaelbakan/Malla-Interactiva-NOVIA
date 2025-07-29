@@ -499,33 +499,33 @@
   }
 
   function puedeAprobar(materia) {
- if (!materia.requisitos || materia.requisitos.length === 0) {
-  if (materia.id === "electivaespecial1") {
-    const ramosOctavo = materias["8"].map(m => m.id);
-    return ramosOctavo.every(id => estado[id]);
-  }
-  if (["electiva2", "electiva3", "electiva4"].includes(materia.id)) {
-    const requeridas = materias["8"]
-      .filter(m => !["gira", "examen"].includes(m.id))
-      .map(m => m.id);
-    return requeridas.every(id => estado[id]);
-  }
-  if (materia.id === "gira" || materia.id === "examen") {
-    const ramosHastaHigiene = materias["8"]
-      .filter(m => m.id !== "gira" && m.id !== "examen")
-      .map(m => m.id);
-    return ramosHastaHigiene.every(id => estado[id]);
-  }
-  if (materia.id === "titula1") {
-    const ramosHastaElectivaEspecial1 = [];
-    for (const m of materias["9"]) {
-      ramosHastaElectivaEspecial1.push(m.id);
-      if (m.id === "electivaespecial1") break;
+    if (!materia.requisitos || materia.requisitos.length === 0) {
+      if (materia.id === "electivaespecial1") {
+        const ramosOctavo = materias["8"].map(m => m.id);
+        return ramosOctavo.every(id => estado[id]);
+      }
+      if (["electiva2", "electiva3", "electiva4"].includes(materia.id)) {
+        const requeridas = materias["8"]
+          .filter(m => !["gira", "examen"].includes(m.id))
+          .map(m => m.id);
+        return requeridas.every(id => estado[id]);
+      }
+      if (materia.id === "gira" || materia.id === "examen") {
+        const ramosHastaHigiene = materias["8"]
+          .filter(m => m.id !== "gira" && m.id !== "examen")
+          .map(m => m.id);
+        return ramosHastaHigiene.every(id => estado[id]);
+      }
+      if (materia.id === "titula1") {
+        const ramosHastaElectivaEspecial1 = [];
+        for (const m of materias["9"]) {
+          ramosHastaElectivaEspecial1.push(m.id);
+          if (m.id === "electivaespecial1") break;
+        }
+        return ramosHastaElectivaEspecial1.every(id => estado[id]);
+      }
+      return true;
     }
-    return ramosHastaElectivaEspecial1.every(id => estado[id]);
-  }
-  return true;
-}
 
     return materia.requisitos.every(req => estado[req]);
   }
